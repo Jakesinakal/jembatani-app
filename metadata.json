@@ -1,0 +1,6 @@
+{
+  "name": "JembaTani",
+  "description": "Marketplace pertanian Indonesia yang menghubungkan petani dan pembeli untuk transaksi B2B dan B2C secara transparan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
