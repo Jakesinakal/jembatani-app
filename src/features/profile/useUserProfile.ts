@@ -2,10 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Shared portfolio demo account always shows a fixed profile photo (served from /public).
-const DEMO_EMAIL = 'demo@jembatani.app';
-const DEMO_AVATAR_URL = '/Bemo.jpg';
-
 export interface ProfileData {
   id: string;
   name: string;
@@ -53,12 +49,10 @@ export function useUserProfile() {
         return;
       }
 
-      const isDemo = user!.email === DEMO_EMAIL;
-
       setProfile({
         id: row.id,
         name: row.name,
-        avatarUrl: isDemo ? DEMO_AVATAR_URL : row.avatar_url,
+        avatarUrl: row.avatar_url,
         roles: row.roles,
         location: row.location,
         isVerified: row.is_verified,

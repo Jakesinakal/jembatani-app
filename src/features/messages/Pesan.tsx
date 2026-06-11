@@ -15,16 +15,13 @@ import { EmptyState } from '@/components/ui/EmptyState';
 export default function Pesan() {
   const navigate = useNavigate();
   const { chats, loading } = useChats();
-  const [activeTab, setActiveTab] = useState<'Semua' | 'Negosiasi' | 'Pesanan'>('Semua');
+  const [activeTab, setActiveTab] = useState<'Semua' | 'Negosiasi'>('Semua');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter conversations
   const filteredConversations = chats.filter((chat) => {
     // 1. Tab category filter
     if (activeTab === 'Negosiasi' && !chat.hasActiveNegotiation) return false;
-    // TODO: 'Pesanan' needs a proper order/transaction concept in the schema.
-    // For now it shows chats that aren't under active negotiation.
-    if (activeTab === 'Pesanan' && chat.hasActiveNegotiation) return false;
 
     // 2. Query search
     if (searchQuery) {
@@ -59,9 +56,9 @@ export default function Pesan() {
         </div>
       </div>
 
-      {/* Tab Strip selector: Semua | Negosiasi | Pesanan | Umum */}
-      <div className="px-5 mt-4 flex items-center gap-2 overflow-x-auto no-scrollbar">
-        {(['Semua', 'Negosiasi', 'Pesanan'] as const).map((tab) => (
+      {/* Tab Strip selector: Semua | Negosiasi */}
+      <div className="px-5 mt-4 flex items-center gap-2">
+        {(['Semua', 'Negosiasi'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -71,11 +68,7 @@ export default function Pesan() {
                 : 'bg-surface-container-low text-on-surface-variant'
             }`}
           >
-            {tab === 'Semua'
-              ? '💬 Semua Chat'
-              : tab === 'Negosiasi'
-                ? '🤝 Negosiasi Aktif'
-                : '📦 Transaksi / Pesanan'}
+            {tab === 'Semua' ? 'Semua Chat' : 'Negosiasi Aktif'}
           </button>
         ))}
       </div>
