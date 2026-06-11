@@ -6,18 +6,27 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/lib/routes';
-import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  TrendingUp,
+  TrendingDown,
+  Loader2,
+  Info,
+  Check,
+} from 'lucide-react';
 import { useCommodities } from '@/features/prices/useCommodities';
 import { formatRupiah } from '@/lib/utils';
 import { CommodityPriceInfo, CommodityCategory } from '@/types/commodity';
 
 type TickerGroup = 'SAYURAN' | 'BUAH' | 'KOMODITAS';
 const TICKER_GROUP_LABELS: Record<TickerGroup, string> = {
-  SAYURAN: '🥦 Sayuran',
-  BUAH: '🍋 Buah',
-  KOMODITAS: '🌾 Komoditas',
+  SAYURAN: 'Sayuran',
+  BUAH: 'Buah',
+  KOMODITAS: 'Komoditas',
 };
 const KOMODITAS_CATEGORIES: CommodityCategory[] = ['PADI', 'REMPAH', 'PERKEBUNAN'];
+const REGIONS = ['Jawa Barat', 'Jawa Tengah', 'DKI Jakarta', 'Jawa Timur', 'Banten'];
 const TICKER_INTERVAL = 5000;
 const GRID_COLS = 3;
 const GRID_ROWS = 4;
@@ -91,6 +100,8 @@ export default function Harga() {
   const [selectedRegion, setSelectedRegion] = useState('Jawa Barat');
   const [slideIndex, setSlideIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'GAINER' | 'LOSER'>('GAINER');
+  const [showInfo, setShowInfo] = useState(false);
+  const [regionOpen, setRegionOpen] = useState(false);
   const slides = useMemo(() => buildSlides(commodities), [commodities]);
   const currentSlide = slides[slideIndex] as TickerSlide | undefined;
 
@@ -136,28 +147,124 @@ export default function Harga() {
   return (
     <div className="flex-1 pb-24 bg-surface text-on-surface">
       {/* Header Panel */}
-      <div className="px-5 pt-6 pb-2">
-        <h1 className="font-fraunces text-headline-lg font-bold text-primary mb-1">
-          Harga Komoditas
-        </h1>
-        <p className="font-jakarta text-body-sm text-on-surface-variant font-medium">
-          Berdasarkan pusat info pasar induk terdekat.
-        </p>
+      <div className="px-5 pt-6 pb-2 relative">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="font-fraunces text-headline-lg font-bold text-primary mb-1">
+              Harga Komoditas
+            </h1>
+            <p className="font-jakarta text-body-sm text-on-surface-variant font-medium">
+              Harga acuan dari pusat info pasar induk terdekat.
+            </p>
+          </div>
+
+          {/* Info toggle — opens a floating note instead of pushing the table down */}
+          <button
+            type="button"
+            onClick={() => setShowInfo((v) => !v)}
+            aria-label="Tentang data harga"
+            aria-expanded={showInfo}
+            className={`shrink-0 mt-0.5 w-8 h-8 rounded-full flex items-center justify-center transition-all active:scale-95 ${
+              showInfo
+                ? 'bg-primary text-on-primary'
+                : 'bg-primary/10 text-primary hover:bg-primary/20'
+            }`}
+          >
+            <Info className="w-4 h-4" strokeWidth={2.4} />
+          </button>
+        </div>
+
+        {/* Floating purpose / transparency note */}
+        {showInfo && (
+          <>
+            {/* Click-away catcher */}
+            <button
+              type="button"
+              aria-hidden="true"
+              tabIndex={-1}
+              onClick={() => setShowInfo(false)}
+              className="fixed inset-0 z-40 cursor-default"
+            />
+            <div
+              role="dialog"
+              className="absolute right-5 top-full -mt-1 z-50 w-[300px] max-w-[calc(100%-2.5rem)] rounded-xl bg-surface-container-lowest border border-outline-variant shadow-xl p-4"
+            >
+              {/* Caret pointing up to the info button */}
+              <span className="absolute -top-1.5 right-3 w-3 h-3 rotate-45 bg-surface-container-lowest border-l border-t border-outline-variant" />
+              <p className="font-jakarta text-body-sm text-on-surface leading-relaxed">
+                <b className="font-bold text-primary">Untuk apa data harga ini?</b> Daftar ini jadi
+                acuan bersama supaya harga lebih <b className="font-bold">transparan dan merata</b>.
+                Dengan tahu harga wajar di pasar, posisi tawarmu setara dan kamu terlindung dari
+                permainan harga — bukan sekadar melihat angka naik-turun.
+              </p>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Region & Date Selector Bar */}
       <div className="px-5 mt-4 flex items-center justify-between gap-3">
-        {/* Region selector pill */}
-        <button
-          onClick={() => {
-            const nextRegion = selectedRegion === 'Jawa Barat' ? 'Jawa Tengah' : 'Jawa Barat';
-            setSelectedRegion(nextRegion);
-          }}
-          className="px-4 py-2 bg-primary text-on-primary rounded-full text-label-md font-bold font-jakarta flex items-center gap-1 hover:bg-opacity-90 transition-all shadow-sm shrink-0"
-        >
-          📍 {selectedRegion}{' '}
-          <span className="text-body-sm text-on-primary-container font-jakarta">▼</span>
-        </button>
+        {/* Region selector */}
+        <div className="relative shrink-0">
+          <button
+            onClick={() => setRegionOpen((v) => !v)}
+            aria-haspopup="listbox"
+            aria-expanded={regionOpen}
+            className="px-4 py-2 bg-primary text-on-primary rounded-full text-label-md font-bold font-jakarta flex items-center gap-1 hover:bg-opacity-90 transition-all shadow-sm"
+          >
+            📍 {selectedRegion}{' '}
+            <span
+              className={`inline-block text-body-sm text-on-primary-container font-jakarta transition-transform duration-200 ${
+                regionOpen ? 'rotate-180' : ''
+              }`}
+            >
+              ▼
+            </span>
+          </button>
+
+          {regionOpen && (
+            <>
+              {/* Click-away catcher */}
+              <button
+                type="button"
+                aria-hidden="true"
+                tabIndex={-1}
+                onClick={() => setRegionOpen(false)}
+                className="fixed inset-0 z-40 cursor-default"
+              />
+              {/* Compact dropdown */}
+              <div
+                role="listbox"
+                className="absolute left-0 top-full mt-2 z-50 w-44 origin-top-left rounded-xl bg-surface-container-lowest border border-outline-variant shadow-xl p-1.5 animate-[fadeIn_0.12s_ease-out]"
+              >
+                {REGIONS.map((region) => {
+                  const isActive = region === selectedRegion;
+                  return (
+                    <button
+                      key={region}
+                      role="option"
+                      aria-selected={isActive}
+                      onClick={() => {
+                        setSelectedRegion(region);
+                        setRegionOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-left font-jakarta text-body-sm font-semibold transition-colors ${
+                        isActive
+                          ? 'bg-primary-container text-on-primary-container'
+                          : 'text-on-surface hover:bg-surface-container-low'
+                      }`}
+                    >
+                      <span>{region}</span>
+                      {isActive && (
+                        <Check strokeWidth={2.5} className="w-4 h-4 text-primary shrink-0" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Date Row with arrows */}
         <div className="flex items-center gap-2 bg-surface-container-high px-3.5 py-1.5 rounded-full border border-outline-variant/60">

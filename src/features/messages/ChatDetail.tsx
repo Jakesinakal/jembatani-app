@@ -88,7 +88,7 @@ export default function ChatDetail() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center min-h-screen bg-surface">
+      <div className="flex-1 flex items-center justify-center min-h-full bg-surface">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -96,7 +96,7 @@ export default function ChatDetail() {
 
   if (!chat) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-screen bg-surface gap-4 px-8 text-center">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-full bg-surface gap-4 px-8 text-center">
         <p className="font-jakarta text-body-md text-on-surface-variant">Chat tidak ditemukan.</p>
         <Button onClick={() => navigate(ROUTES.PESAN)} variant="secondary" size="sm">
           Kembali ke Pesan
@@ -106,7 +106,7 @@ export default function ChatDetail() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-surface text-on-surface relative">
+    <div className="flex-1 flex flex-col min-h-full bg-surface text-on-surface relative">
       {/* Stick Header row */}
       <div className="sticky top-0 bg-surface-container-highest/95 backdrop-blur-md z-30 px-5 py-4 flex items-center justify-between border-b border-outline-variant/60">
         <div className="flex items-center gap-3.5 flex-1 min-w-0">

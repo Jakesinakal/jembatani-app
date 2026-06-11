@@ -27,7 +27,7 @@ export function CreateBottomSheet({ isOpen, onClose }: CreateBottomSheetProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="absolute inset-0 z-50 flex items-end justify-center">
       {/* Black Translucent backdrop click outside */}
       <div
         id="sheet-backdrop-dismiss"
@@ -38,7 +38,7 @@ export function CreateBottomSheet({ isOpen, onClose }: CreateBottomSheetProps) {
       {/* Frame Container */}
       <div
         id="sheet-content-slide"
-        className="relative w-full max-w-[480px] bg-surface rounded-t-xl shadow-2xl flex flex-col z-10 animate-[slideUp_0.3s_ease-out] border-t border-outline-variant"
+        className="relative w-full bg-surface rounded-t-xl shadow-2xl flex flex-col z-10 animate-[slideUp_0.3s_ease-out] border-t border-outline-variant"
       >
         {/* Drag Indicator handle */}
         <div className="w-12 h-1 bg-outline-variant/60 rounded-full mx-auto my-3" />

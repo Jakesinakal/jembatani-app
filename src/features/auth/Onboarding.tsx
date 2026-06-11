@@ -48,7 +48,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between min-h-screen bg-surface relative overflow-hidden">
+    <div className="flex-1 flex flex-col justify-between min-h-full bg-surface relative overflow-hidden">
       {/* Background Image Carousel with Fade Animation */}
       <div className="absolute inset-0 w-full h-[60%] z-0">
         <AnimatePresence mode="wait">

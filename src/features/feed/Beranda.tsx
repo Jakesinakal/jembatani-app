@@ -151,17 +151,17 @@ export default function Beranda({ posts, postsLoading, onLikePost }: BerandaProp
           { value: 'Semua', label: 'Semua', activeClass: 'bg-primary text-on-primary' },
           {
             value: 'Penawaran',
-            label: '🧺 Penawaran Petani',
+            label: 'Penawaran Petani',
             activeClass: 'bg-tertiary-fixed text-on-tertiary-fixed',
           },
           {
             value: 'Permintaan',
-            label: '💼 Permintaan Pembeli',
+            label: 'Permintaan Pembeli',
             activeClass: 'bg-primary-fixed text-on-primary-fixed-variant',
           },
           {
             value: 'Dekat Saya',
-            label: '📍 Dekat Saya',
+            label: 'Dekat Saya',
             activeClass:
               'bg-surface-container-highest border border-outline-variant text-on-surface',
           },

@@ -19,7 +19,7 @@ export default function Splash() {
   }, [navigate]);
 
   return (
-    <div className="flex-1 bg-primary flex flex-col items-center justify-between p-8 min-h-screen text-on-primary">
+    <div className="flex-1 bg-primary flex flex-col items-center justify-between p-8 min-h-full text-on-primary">
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         {/* Animated logo badge */}
         <motion.div

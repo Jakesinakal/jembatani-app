@@ -27,7 +27,7 @@ export function BottomNav() {
     <>
       <div
         id="bottom-navigation-bar"
-        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-surface-container-highest border-t border-outline-variant/60 flex justify-around items-end pb-3 pt-2 px-2 z-40"
+        className="absolute bottom-0 left-0 right-0 bg-surface-container-highest border-t border-outline-variant/60 flex justify-around items-end pb-3 pt-2 px-2 z-40"
       >
         {tabs.map((tab) => {
           const Icon = tab.icon;

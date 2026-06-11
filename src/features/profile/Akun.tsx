@@ -8,10 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   MapPin,
   Settings,
-  Briefcase,
   ChevronRight,
   UserCheck,
-  CreditCard,
   FileText,
   LogOut,
   Sparkles,
@@ -48,14 +46,6 @@ export default function Akun() {
         { label: 'Postingan saya', subtitle: 'List semua katalog hasil panen', icon: FileText },
         { label: 'Tersimpan', subtitle: 'Koleksi postingan petani favorit', icon: FolderHeart },
         { label: 'Riwayat tawaran', subtitle: 'Arsip negosiasi harga', icon: Sparkles },
-      ],
-    },
-    {
-      title: 'Transaksi & Keuangan',
-      items: [
-        { label: 'Pesanan Aktif', subtitle: 'Lacak pengiriman truk/logistik', icon: Briefcase },
-        { label: 'Riwayat Pesanan', subtitle: 'Selesai & Faktur', icon: BookOpen },
-        { label: 'Dompet & Pencairan', subtitle: 'Saldo: Rp 2.450.000', icon: CreditCard },
       ],
     },
     {

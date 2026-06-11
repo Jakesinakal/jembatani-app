@@ -89,7 +89,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-surface flex flex-col justify-between px-5 py-8">
+    <div className="flex-1 min-h-full bg-surface flex flex-col justify-between px-5 py-8">
       <div>
         <div className="flex items-center justify-between mt-2 mb-8">
           <button

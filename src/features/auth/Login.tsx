@@ -54,7 +54,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-surface flex flex-col justify-between px-5 py-8">
+    <div className="flex-1 min-h-full bg-surface flex flex-col justify-between px-5 py-8">
       <div>
         {/* Header Section */}
         <div className="text-center mt-6 mb-12">

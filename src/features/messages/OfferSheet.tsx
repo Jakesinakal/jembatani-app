@@ -51,12 +51,12 @@ export function OfferSheet({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="absolute inset-0 z-50 flex items-end justify-center">
       {/* Backdrop */}
       <div onClick={onClose} className="absolute inset-0 bg-black/50 transition-opacity" />
 
       {/* Panel */}
-      <div className="relative w-full max-w-[480px] bg-surface rounded-t-xl shadow-2xl flex flex-col z-10 animate-[slideUp_0.3s_ease-out] border-t border-outline-variant">
+      <div className="relative w-full bg-surface rounded-t-xl shadow-2xl flex flex-col z-10 animate-[slideUp_0.3s_ease-out] border-t border-outline-variant">
         <div className="w-12 h-1 bg-outline-variant/60 rounded-full mx-auto my-3" />
 
         {/* Header */}

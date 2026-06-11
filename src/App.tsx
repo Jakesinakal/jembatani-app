@@ -3,11 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
   Outlet,
+  useLocation,
   useOutletContext,
 } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
@@ -48,6 +50,63 @@ export interface AppShellContext {
 function AppShell() {
   const { user, loading: authLoading } = useAuth();
   const { posts, loading: postsLoading, refetch, handleLikePost } = useFeedPosts();
+  const location = useLocation();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  // Per-route scroll memory: scrollTop saved by pathname so each tab keeps its place.
+  const scrollPositions = useRef<Record<string, number>>({});
+  const activePathRef = useRef(location.pathname);
+
+  // Continuously remember the scroll position of whichever route is showing.
+  // Depends on `user` so it (re)attaches once the shell actually renders post-auth.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      scrollPositions.current[activePathRef.current] = el.scrollTop;
+    };
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [user]);
+
+  // On every route change, restore the remembered position (or jump to top on first visit).
+  useLayoutEffect(() => {
+    activePathRef.current = location.pathname;
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const target = scrollPositions.current[location.pathname] ?? 0;
+    el.scrollTop = target;
+    if (target <= 0) return; // nothing to chase
+
+    // Tabs like Harga/Pesan/Akun re-fetch on mount and show a loading spinner
+    // first, so the container isn't tall enough to reach `target` yet. Re-apply
+    // each frame as the content grows — until it's reachable, the user takes
+    // over, or a short time budget elapses.
+    let rafId = 0;
+    const start = performance.now();
+    let interrupted = false;
+    const stop = () => {
+      interrupted = true;
+    };
+    el.addEventListener('wheel', stop, { passive: true, once: true });
+    el.addEventListener('touchmove', stop, { passive: true, once: true });
+
+    const step = () => {
+      if (interrupted) return;
+      const reachable = el.scrollHeight - el.clientHeight;
+      el.scrollTop = Math.min(target, reachable);
+      if (reachable < target && performance.now() - start < 1200) {
+        rafId = requestAnimationFrame(step);
+      }
+    };
+    rafId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      el.removeEventListener('wheel', stop);
+      el.removeEventListener('touchmove', stop);
+    };
+  }, [location.pathname]);
 
   if (authLoading) return null;
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
@@ -61,7 +120,7 @@ function AppShell() {
 
   return (
     <SafeArea>
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div ref={scrollRef} className="flex-1 flex flex-col overflow-y-auto">
         <Outlet context={contextValue} />
       </div>
       <BottomNav />
@@ -77,7 +136,7 @@ function AuthShell() {
 
   return (
     <SafeArea>
-      <div className="flex-1 flex flex-col min-h-screen bg-surface">
+      <div className="flex-1 flex flex-col overflow-y-auto bg-surface">
         <Outlet />
       </div>
     </SafeArea>
